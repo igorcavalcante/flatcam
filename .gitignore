@@ -1,3 +1,4 @@
 *.pyc
 .idea/
 tests/tmp/
+flatpak-pip-generator.py

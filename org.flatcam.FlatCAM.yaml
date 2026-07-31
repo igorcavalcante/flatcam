@@ -1,0 +1,65 @@
+app-id: org.flatcam.FlatCAM
+runtime: org.kde.Platform
+runtime-version: '5.15-23.08'
+sdk: org.kde.Sdk
+
+# Define o BaseApp do PyQt
+base: com.riverbankcomputing.PyQt.BaseApp
+base-version: '5.15-23.08'
+
+command: flatcam
+
+finish-args:
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --socket=x11
+  - --share=ipc
+  - --share=network
+  - --device=dri
+  - --filesystem=host
+
+modules:
+  # Módulo de dependências gerado pelo flatpak-pip-generator
+  - python-deps.json
+
+  # Módulo principal do seu código
+  - name: flatcam
+    buildsystem: simple
+    sources:
+      - type: dir
+        path: .
+    build-commands:
+      # Instala o projeto dentro de /app/share/flatcam
+      - mkdir -p /app/share/flatcam
+      - cp -r * /app/share/flatcam/
+
+      # Cria o script de execução em /app/bin/flatcam
+      - mkdir -p /app/bin
+      - |
+        cat << 'EOF' > /app/bin/flatcam
+        #!/bin/sh
+        exec python3 /app/share/flatcam/flatcam "$@"
+        EOF
+      - chmod +x /app/bin/flatcam
+
+      # Atalho .desktop para a interface gráfica
+      - mkdir -p /app/share/applications
+      - |
+        cat << 'EOF' > /app/share/applications/org.flatcam.FlatCAM.desktop
+        [Desktop Entry]
+        Type=Application
+        Name=FlatCAM
+        Comment=Gerador de G-Code para PCI
+        Exec=flatcam
+        Icon=org.flatcam.FlatCAM
+        Terminal=false
+        Categories=Development;Engineering;Electronics;
+        EOF
+
+      # Ícone da aplicação
+      - mkdir -p /app/share/icons/hicolor/256x256/apps
+      - cp /app/share/flatcam/share/favicon.png /app/share/icons/hicolor/256x256/apps/org.flatcam.FlatCAM.png
+
+      # Metadados AppStream (metainfo)
+      - mkdir -p /app/share/metainfo
+      - cp /app/share/flatcam/org.flatcam.FlatCAM.metainfo.xml /app/share/metainfo/org.flatcam.FlatCAM.metainfo.xml

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>org.flatcam.FlatCAM</id>
+
+  <name>FlatCAM</name>
+  <summary>2D Computer-Aided PCB Manufacturing</summary>
+
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+
+  <developer id="org.flatcam">
+    <name>Juan Pablo Caram</name>
+  </developer>
+
+  <description>
+    <p>
+      FlatCAM is a 2D post-processing tool for manufacturing printed circuit
+      boards (PCBs). It reads Gerber, Excellon and G-Code files and generates
+      the tool paths needed to isolate traces, drill holes, cut out boards and
+      produce the final G-Code for your CNC machine or engraver.
+    </p>
+    <p>Main features:</p>
+    <ul>
+      <li>Import Gerber, Excellon and G-Code files</li>
+      <li>Isolation routing of copper traces</li>
+      <li>Board cutout and drilling operations</li>
+      <li>Non-copper region clearing and paint area toolpaths</li>
+      <li>Scripting through an integrated command shell</li>
+      <li>Export of G-Code and SVG</li>
+    </ul>
+    <p>
+      This is a fork of the original FlatCAM by Juan Pablo Caram, updated to run
+      on modern Linux with PyQt5.
+    </p>
+  </description>
+
+  <launchable type="desktop-id">org.flatcam.FlatCAM.desktop</launchable>
+
+  <categories>
+    <category>Engineering</category>
+    <category>Electronics</category>
+    <category>Development</category>
+  </categories>
+
+  <keywords>
+    <keyword>cam</keyword>
+    <keyword>pcb</keyword>
+    <keyword>gerber</keyword>
+    <keyword>excellon</keyword>
+    <keyword>gcode</keyword>
+    <keyword>cnc</keyword>
+  </keywords>
+
+  <url type="homepage">https://flatcam.org</url>
+  <url type="bugtracker">https://bitbucket.org/jpcgt/flatcam</url>
+
+  <content_rating type="oars-1.1" />
+
+  <releases>
+    <release type="development" version="8.5-dev" date="2026-07-31">
+      <description>
+        <p>
+          Development snapshot built from the project's git branch (not an
+          official upstream release). Packaged as a Flatpak with a pure-Python
+          command shell that removes the Tcl/Tk dependency.
+        </p>
+      </description>
+    </release>
+  </releases>
+</component>

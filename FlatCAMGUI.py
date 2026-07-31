@@ -294,7 +294,7 @@ class FlatCAMGUI(QtWidgets.QMainWindow):
     def closeEvent(self, event):
         grect = self.geometry()
         self.geom_update.emit(grect.x(), grect.y(), grect.width(), grect.height())
-        QtGui.qApp.quit()
+        QtWidgets.QApplication.instance().quit()
 
 
 

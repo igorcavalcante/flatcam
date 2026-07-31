@@ -16,7 +16,6 @@ import simplejson as json
 import re
 import webbrowser
 import os
-import tkinter
 from PyQt5 import QtCore, QtGui, QtWidgets
 import time  # Just used for debugging. Double check before removing.
 from xml.dom.minidom import parseString as parse_xml_string
@@ -33,6 +32,7 @@ from PlotCanvas import PlotCanvas
 from FlatCAMGUI import FlatCAMGUI, GlobalOptionsUI, FlatCAMActivityView, FlatCAMInfoBar
 from FlatCAMCommon import LoudDict
 from FlatCAMShell import FCShell
+from FlatCAMTclInterpreter import TclCommandInterpreter
 from FlatCAMDraw import FlatCAMDraw
 from FlatCAMProcess import *
 from GUIElements import FCInputDialog
@@ -644,7 +644,7 @@ class App(QtCore.QObject):
             # because tcl  was execudted in old instance of TCL
             pass
         else:
-            self.tcl = tkinter.Tcl()
+            self.tcl = TclCommandInterpreter(error_class=self.TclErrorException)
             self.setup_shell()
 
     def defaults_read_form(self):
@@ -817,9 +817,7 @@ class App(QtCore.QObject):
         else:
             text = error
 
-        text = text.replace('[', '\\[').replace('"', '\\"')
-
-        self.tcl.eval('return -code error "%s"' % text)
+        raise self.TclErrorException(text)
 
     def raise_tcl_error(self, text):
         """
@@ -863,9 +861,9 @@ class App(QtCore.QObject):
             if result != 'None':
                 self.shell.append_output(result + '\n')
 
-        except tkinter.TclError as e:
-            # This will display more precise answer if something in TCL shell fails
-            result = self.tcl.eval("set errorInfo")
+        except self.TclErrorException as e:
+            # This will display more precise answer if something in the shell fails
+            result = str(e)
             self.log.error("Exec command Exception: %s" % (result + '\n'))
             self.shell.append_error('ERROR: ' + result + '\n')
             # Show error in console and just return or in test raise exception
@@ -1176,7 +1174,7 @@ class App(QtCore.QObject):
         self.save_defaults()
 
     def on_file_exit(self):
-        QtGui.qApp.quit()
+        QtWidgets.QApplication.instance().quit()
 
     def save_defaults(self, silent=False):
         """
@@ -4167,21 +4165,9 @@ class App(QtCore.QObject):
         # This modifies the variable 'commands'.
         tclCommands.register_all_commands(self, commands)
 
-        # Add commands to the tcl interpreter
+        # Add commands to the interpreter
         for cmd in commands:
             self.tcl.createcommand(cmd, commands[cmd]['fcn'])
-
-        # Make the tcl puts function return instead of print to stdout
-        self.tcl.eval('''
-            rename puts original_puts
-            proc puts {args} {
-                if {[llength $args] == 1} {
-                    return "[lindex $args 0]"
-                } else {
-                    eval original_puts $args
-                }
-            }
-            ''')
 
     def setup_recent_items(self):
         self.log.debug("setup_recent_items()")
