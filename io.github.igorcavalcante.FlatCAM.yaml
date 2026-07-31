@@ -1,0 +1,77 @@
+app-id: io.github.igorcavalcante.FlatCAM
+runtime: org.kde.Platform
+runtime-version: '5.15-23.08'
+sdk: org.kde.Sdk
+
+# PyQt5 BaseApp provides Python 3 + PyQt5 built against the KDE runtime.
+base: com.riverbankcomputing.PyQt.BaseApp
+base-version: '5.15-23.08'
+
+command: flatcam
+
+finish-args:
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --share=ipc
+  - --device=dri
+  # File access is granted per-file through the xdg-desktop-portal FileChooser
+  # when the user opens/saves Gerber, Excellon or G-Code files. No broad
+  # filesystem access is requested, per Flathub guidelines.
+
+cleanup:
+  - /include
+  - /lib/pkgconfig
+  - /share/man
+  - '*.a'
+  - '*.la'
+
+modules:
+  # Python dependencies as pinned wheels (offline pip install, sha256 verified).
+  - python-deps.json
+
+  # FlatCAM itself, built from the project's git repository.
+  - name: flatcam
+    buildsystem: simple
+    sources:
+      - type: git
+        url: https://github.com/igorcavalcante/flatcam.git
+        commit: 9e25dc044e6f1f3cb6afc0abfcd9a139e74abec1
+      - type: file
+        path: io.github.igorcavalcante.FlatCAM.metainfo.xml
+    build-commands:
+      # Install the application source (excluding the local dev virtualenv and
+      # packaging/build artifacts) into /app/share/flatcam.
+      - mkdir -p /app/share/flatcam
+      - cp -r *.py flatcam tclCommands descartes share /app/share/flatcam/
+
+      # Launcher: run from the app directory so relative "share/..." paths and
+      # QDir search paths resolve correctly.
+      - mkdir -p /app/bin
+      - |
+        cat << 'EOF' > /app/bin/flatcam
+        #!/bin/sh
+        cd /app/share/flatcam || exit 1
+        exec python3 /app/share/flatcam/flatcam "$@"
+        EOF
+      - chmod +x /app/bin/flatcam
+
+      # Desktop entry.
+      - mkdir -p /app/share/applications
+      - |
+        cat << 'EOF' > /app/share/applications/io.github.igorcavalcante.FlatCAM.desktop
+        [Desktop Entry]
+        Type=Application
+        Name=FlatCAM
+        Comment=2D Computer-Aided PCB Manufacturing
+        Exec=flatcam
+        Icon=io.github.igorcavalcante.FlatCAM
+        Terminal=false
+        Categories=Development;Engineering;Electronics;
+        Keywords=cam;pcb;gerber;excellon;gcode;cnc;
+        EOF
+
+      # Application icon (256x256).
+      - install -Dm644 share/flatcam_icon256.png /app/share/icons/hicolor/256x256/apps/io.github.igorcavalcante.FlatCAM.png
+
+      # AppStream metadata.
+      - install -Dm644 io.github.igorcavalcante.FlatCAM.metainfo.xml /app/share/metainfo/io.github.igorcavalcante.FlatCAM.metainfo.xml
