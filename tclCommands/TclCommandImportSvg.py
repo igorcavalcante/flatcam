@@ -77,4 +77,3 @@ class TclCommandImportSvg(TclCommandSignaled):
 
             # GUI feedback
             self.app.inform.emit("Opened: " + filename)
-

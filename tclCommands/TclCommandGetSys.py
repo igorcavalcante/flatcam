@@ -46,4 +46,3 @@ class TclCommandGetSys(TclCommand):
 
         if name in self.app.defaults:
             return self.app.defaults[name]
-

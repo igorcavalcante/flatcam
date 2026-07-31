@@ -70,4 +70,3 @@ class TclCommandSetSys(TclCommand):
             self.app.propagate_defaults()
         else:
             self.raise_tcl_error("No such system parameter \"{}\".".format(param))
-

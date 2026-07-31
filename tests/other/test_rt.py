@@ -21,4 +21,3 @@ print([r.bbox for r in list(rt.nearest((0, 0), 10, True))])
 for pt in pts:
     rt.delete(0, pt2rect(pt))
     print((pt2rect(pt), [r.bbox for r in list(rt.nearest((0, 0), 10, True))]))
-

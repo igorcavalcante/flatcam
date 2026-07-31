@@ -1,4 +1,4 @@
-from PyQt4 import QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 from FlatCAMTool import FlatCAMTool
 from copy import copy
 from math import sqrt
@@ -11,16 +11,14 @@ class Measurement(FlatCAMTool):
     def __init__(self, app):
         FlatCAMTool.__init__(self, app)
 
-        # self.setContentsMargins(0, 0, 0, 0)
-        self.layout.setMargin(0)
         self.layout.setContentsMargins(0, 0, 3, 0)
 
-        self.setSizePolicy(QtGui.QSizePolicy.Ignored, QtGui.QSizePolicy.Maximum)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Maximum)
 
         self.point1 = None
         self.point2 = None
-        self.label = QtGui.QLabel("Click on a reference point ...")
-        self.label.setFrameStyle(QtGui.QFrame.StyledPanel | QtGui.QFrame.Plain)
+        self.label = QtWidgets.QLabel("Click on a reference point ...")
+        self.label.setFrameStyle(QtWidgets.QFrame.StyledPanel | QtWidgets.QFrame.Plain)
         self.label.setMargin(3)
         self.layout.addWidget(self.label)
         # self.layout.setMargin(0)

@@ -43,4 +43,3 @@ class TclCommandVersion(TclCommand):
         """
 
         self.app.version_check()
-

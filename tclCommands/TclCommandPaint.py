@@ -79,5 +79,3 @@ class TclCommandPaint(TclCommandSignaled):
         y = args['y']
 
         obj.paint_poly_single_click([x, y], tooldia, overlap, outname)
-
-

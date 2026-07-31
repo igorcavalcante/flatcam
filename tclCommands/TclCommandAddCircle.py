@@ -61,4 +61,3 @@ class TclCommandAddCircle(TclCommand):
             return "Object not found: %s" % obj_name
 
         obj.add_circle([float(center_x), float(center_y)], float(radius))
-
