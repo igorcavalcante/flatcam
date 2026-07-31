@@ -744,7 +744,7 @@ class FlatCAMExcellon(FlatCAMObj, Excellon):
                 #    exc.to_form()
                 #    exc.read_form()
                 for option in exc.options:
-                    if option is not 'name':
+                    if option != 'name':
                         try:
                             exc_final.options[option] = exc.options[option]
                         except:

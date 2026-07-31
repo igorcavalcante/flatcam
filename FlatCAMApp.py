@@ -1176,7 +1176,7 @@ class App(QtCore.QObject):
         self.save_defaults()
 
     def on_file_exit(self):
-        QtGui.qApp.quit()
+        QtWidgets.QApplication.instance().quit()
 
     def save_defaults(self, silent=False):
         """
