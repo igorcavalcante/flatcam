@@ -48,12 +48,13 @@ import tclCommands.TclCommandSubtractPoly
 import tclCommands.TclCommandSubtractRectangle
 import tclCommands.TclCommandVersion
 import tclCommands.TclCommandWriteGCode
+import importlib
 
 
 __all__ = []
 
 for loader, name, is_pkg in pkgutil.walk_packages(__path__):
-    module = loader.find_module(name).load_module(name)
+    module = importlib.import_module(f"{__name__}.{name}")
     __all__.append(name)
 
 

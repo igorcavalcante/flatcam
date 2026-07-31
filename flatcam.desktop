@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=FlatCAM
 Comment=2D Computer-Aided PCB Manufacturing
-Exec=flatcam
+Exec=/home/quiron/.local/opt/flatcam/venv/bin/python /home/quiron/.local/opt/flatcam/flatcam
 Icon=flatcam
 Keywords=cam;pcb;gerber
 Terminal=false
